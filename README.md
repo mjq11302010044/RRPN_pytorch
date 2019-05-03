@@ -71,12 +71,11 @@ python tools/train_net.py --config-file=configs/rrpn/e2e_rrpn_R_50_C4_1x_ICDAR13
 - citing us if you find it work in your projects.
 ```
 @misc{ma2019rrpn,
-author = {Jianqi Ma},
-title = {{RRPN in pytorch}},
-year = {2018},
-howpublished = {\url{https://github.com/mjq11302010044/RRPN_pytorch}},
+    author = {Jianqi Ma},
+    title = {{RRPN in pytorch}},
+    year = {2018},
+    howpublished = {\url{https://github.com/mjq11302010044/RRPN_pytorch}},
 }
-
 @article{Jianqi17RRPN,
     Author = {Jianqi Ma and Weiyuan Shao and Hao Ye and Li Wang and Hong Wang and Yingbin Zheng and Xiangyang Xue},
     Title = {Arbitrary-Oriented Scene Text Detection via Rotation Proposals},
@@ -86,7 +85,4 @@ howpublished = {\url{https://github.com/mjq11302010044/RRPN_pytorch}},
     pages={3111-3122}, 
     year={2018}
 }
-
-
 ```
-
