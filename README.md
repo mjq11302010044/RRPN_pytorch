@@ -73,7 +73,7 @@ python tools/train_net.py --config-file=configs/rrpn/e2e_rrpn_R_50_C4_1x_ICDAR13
 @misc{ma2019rrpn,
     author = {Jianqi Ma},
     title = {{RRPN in pytorch}},
-    year = {2018},
+    year = {2019},
     howpublished = {\url{https://github.com/mjq11302010044/RRPN_pytorch}},
 }
 @article{Jianqi17RRPN,
