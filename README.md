@@ -2,6 +2,8 @@
 RRPN in pytorch, which is implemented into facebook's benchmark: https://github.com/facebookresearch/maskrcnn-benchmark. 
 Its caffe version can be viewed at: https://github.com/mjq11302010044/RRPN.
 
+![alt text](demo/results/rrpn3.png "Results from IC15 testing set")
+
 ## Highlights
 - **From original repo:** In pytorch 1.0, Somehow faster than original repo in both training and inference.
 - **Training and evaluation checked:** Testing in IC15 with training data in {IC13, IC15, IC17mlt}, and receives Fscore of 83% vs. 81% in caffe repo.
@@ -57,4 +59,30 @@ DATASET = {
 ```bash
 # In your root of RRPN
 python tools/train_net.py --config-file=configs/rrpn/e2e_rrpn_R_50_C4_1x_ICDAR13_15_17_trial.yaml
+```
+- Multi-GPU phase is not testing yet, be careful to use GPU more than 1.
+
+## Testing
+- Using `$RRPN_ROOT/demo/RRPN_Demo.py` to test images you want. The demo will generate a text for your detected coodinates.
+- Showing the detected image by ture the variable `vis` to True.
+
+## Final 
+- Enjoy it with all the codes.
+- citing us if you find it work in your projects.
+```
+@misc{ma2019rrpn,
+    author = {Jianqi Ma},
+    title = {{RRPN in pytorch}},
+    year = {2018},
+    howpublished = {\url{https://github.com/mjq11302010044/RRPN_pytorch}},
+}
+@article{Jianqi17RRPN,
+    Author = {Jianqi Ma and Weiyuan Shao and Hao Ye and Li Wang and Hong Wang and Yingbin Zheng and Xiangyang Xue},
+    Title = {Arbitrary-Oriented Scene Text Detection via Rotation Proposals},
+    journal = {IEEE Transactions on Multimedia},
+    volume={20}, 
+    number={11}, 
+    pages={3111-3122}, 
+    year={2018}
+}
 ```
