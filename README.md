@@ -2,7 +2,7 @@
 RRPN in pytorch, which is implemented into facebook's benchmark: https://github.com/facebookresearch/maskrcnn-benchmark. 
 Its caffe version can be viewed at: https://github.com/mjq11302010044/RRPN.
 
-![alt text](demo/results/rrpn1.png "Results from IC15 testing set)
+![alt text](demo/results/rrpn1.png "Results from IC15 testing set")
 
 ## Highlights
 - **From original repo:** In pytorch 1.0, Somehow faster than original repo in both training and inference.
