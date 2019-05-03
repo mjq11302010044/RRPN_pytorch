@@ -27,19 +27,19 @@ Check [INSTALL.md](INSTALL.md) for installation instructions.
 - Add your dataset?
 You need to form a dict array as follows:
 ```bash
-        im_info = {
-            'gt_classes': your class_id array,
-            'max_classes': your class_id array,
-            'image': path to access one image,
-            'boxes': rotate box in {cx, cy, w, h, θ},
-            'flipped': Not supported, just False, 
-            'gt_overlaps': overlaps fill with 1 (gt with gt),
-            'seg_areas': H * W for an rbox,
-            'height': height of an image,
-            'width': width of an image,
-            'max_overlaps': overlaps fill with 1 (gt with gt),
-            'rotated': just True
-        }
+im_info = {
+    'gt_classes': your class_id array,
+    'max_classes': your class_id array,
+    'image': path to access one image,
+    'boxes': rotate box in {cx, cy, w, h, θ},
+    'flipped': Not supported, just False, 
+    'gt_overlaps': overlaps fill with 1 (gt with gt),
+    'seg_areas': H * W for an rbox,
+    'height': height of an image,
+    'width': width of an image,
+    'max_overlaps': overlaps fill with 1 (gt with gt),
+    'rotated': just True
+}
 ```
 Examples can be seen in `$RRPN_ROOT/maskrcnn_benchmark/data/rotation_series.py`
 Your data API should be add to the variable `DATASET`:
