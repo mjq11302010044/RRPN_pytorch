@@ -68,7 +68,7 @@ python tools/train_net.py --config-file=configs/rrpn/e2e_rrpn_R_50_C4_1x_ICDAR13
 
 ## Final 
 - Enjoy it with all the codes.
-- citing us if you find it work in your projects.
+- Citing us if you find it work in your projects.
 ```
 @misc{ma2019rrpn,
     author = {Jianqi Ma},
