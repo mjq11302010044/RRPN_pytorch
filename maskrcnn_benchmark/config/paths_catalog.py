@@ -115,14 +115,6 @@ class DatasetCatalog(object):
                 'Syn800K': '../datasets/SynthText/',
             },
         },
-        "IRRA": {  # including IC13 and IC15
-                'dataset_list': {
-                    'AAA': '../datasets/TASK0407/',
-                    'BBB': '../datasets/TASK0407/',
-                    'CCC': '../datasets/TASK0407/',
-                    'DDD': '../datasets/TASK0407/',
-            },
-        },
         "MASK_RRPN": {  # including IC13 and IC15
             'dataset_list': {
                 #'ArT': '../datasets/ArT/',
@@ -185,16 +177,6 @@ class DatasetCatalog(object):
             )
             return dict(
                 factory="SpottingDataset",
-                args=args,
-            )
-        elif "IRRA" in name:
-            data_dir = DatasetCatalog.DATA_DIR
-            attrs = DatasetCatalog.DATASETS['IRRA']
-            args = dict(
-                database=attrs["dataset_list"],
-            )
-            return dict(
-                factory="IrraRotationDataset",
                 args=args,
             )
         elif "MASK_RRPN" in name:
