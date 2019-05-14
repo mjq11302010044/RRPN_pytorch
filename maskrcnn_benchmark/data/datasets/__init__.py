@@ -5,7 +5,6 @@ from .concat_dataset import ConcatDataset
 from .icdar_series import ICDAR2013Dataset
 from .rotation_series import RotationDataset
 from .rrpn_e2e_series import SpottingDataset
-from .irra_interface import IrraRotationDataset
 from .rotation_mask_datasets import RotationMaskDataset
 
-__all__ = ["COCODataset", "ConcatDataset", "PascalVOCDataset", 'ICDAR2013Dataset', 'RotationDataset', 'SpottingDataset', 'IrraRotationDataset', 'RotationMaskDataset']
+__all__ = ["COCODataset", "ConcatDataset", "PascalVOCDataset", 'ICDAR2013Dataset', 'RotationDataset', 'SpottingDataset', 'RotationMaskDataset']
