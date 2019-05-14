@@ -95,10 +95,10 @@ class DatasetCatalog(object):
         },
         "RRPN_train": {  # including IC13 and IC15
             'dataset_list':{
-                # 'IC13': '../datasets/ICDAR13/',
+                'IC13': '../datasets/ICDAR13/',
                 # 'IC15': '../datasets/ICDAR15/',
                 # 'IC17mlt': '../datasets/ICDAR17mlt/',
-                'LSVT':'../datasets/LSVT/',
+                # 'LSVT':'../datasets/LSVT/',
                 # 'ArT': '../datasets/ArT/'
             },
             "split": 'train'
