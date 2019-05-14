@@ -57,6 +57,10 @@ DATASET = {
 
 ## Training 
 ```bash
+# create your data cache directory
+mkdir data_cache
+```
+```bash
 # In your root of RRPN
 python tools/train_net.py --config-file=configs/rrpn/e2e_rrpn_R_50_C4_1x_ICDAR13_15_17_trial.yaml
 ```
