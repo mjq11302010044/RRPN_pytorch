@@ -43,8 +43,8 @@ python setup.py build_ext install
 
 # install PyTorch Detection
 cd ~/github
-git clone https://github.com/facebookresearch/maskrcnn-benchmark.git
-cd maskrcnn-benchmark
+git clone https://github.com/mjq11302010044/RRPN_pytorch.git
+cd RRPN_pytorch
 # the following will install the lib with
 # symbolic links, so that you can modify
 # the files if you want and won't need to
