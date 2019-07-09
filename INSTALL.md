@@ -10,7 +10,6 @@
 - (optional) OpenCV for the webcam demo
 
 
-### Option 1: Step-by-step installation
 
 ```bash
 # first, make sure that your conda is setup properly with the right environment
@@ -60,18 +59,3 @@ mv build/lib/rotation/*.so ./rotation
 # or if you are on macOS
 # MACOSX_DEPLOYMENT_TARGET=10.9 CC=clang CXX=clang++ python setup.py build develop
 ```
-
-### Option 2: Docker Image (Requires CUDA, Linux only)
-
-Build image with defaults (`CUDA=9.0`, `CUDNN=7`):
-
-    nvidia-docker build -t maskrcnn-benchmark docker/
-    
-Build image with other CUDA and CUDNN versions:
-
-    nvidia-docker build -t maskrcnn-benchmark --build-arg CUDA=9.2 --build-arg CUDNN=7 docker/ 
-    
-Build and run image with built-in jupyter notebook(note that the password is used to log in jupyter notebook):
-
-    nvidia-docker build -t maskrcnn-benchmark-jupyter docker/docker-jupyter/
-    nvidia-docker run -td -p 8888:8888 -e PASSWORD=<password> -v <host-dir>:<container-dir> maskrcnn-benchmark-jupyter
