@@ -27,7 +27,7 @@ pip install ninja yacs cython matplotlib
 
 # follow PyTorch installation in https://pytorch.org/get-started/locally/
 # we give the instructions for CUDA 9.0
-conda install pytorch-nightly -c pytorch
+conda install pytorch
 
 # install torchvision
 cd ~/github
@@ -52,7 +52,7 @@ cd RRPN_pytorch
 python setup.py build develop
 
 #-------
-python rotation_steup.py install
+python rotation_setup.py install
 mv build/lib/rotation/*.so ./rotation
 #-------
 
