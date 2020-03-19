@@ -1,3 +1,17 @@
+## Installation
+
+### Requirements:
+- PyTorch 1.0 from a nightly release. Installation instructions can be found in https://pytorch.org/get-started/locally/
+- torchvision from master
+- cocoapi
+- yacs
+- matplotlib
+- GCC >= 4.9
+- OpenCV 
+
+
+
+```bash
 # first, make sure that your conda is setup properly with the right environment
 # for that, check that `which conda`, `which pip` and `which python` points to the
 # right path. From a clean conda env, this is what you need to do
@@ -43,3 +57,4 @@ mv build/lib/rotation/*.so ./rotation
 
 # or if you are on macOS
 # MACOSX_DEPLOYMENT_TARGET=10.9 CC=clang CXX=clang++ python setup.py build develop
+```
