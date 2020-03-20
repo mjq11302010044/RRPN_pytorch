@@ -16,7 +16,7 @@
 # for that, check that `which conda`, `which pip` and `which python` points to the
 # right path. From a clean conda env, this is what you need to do
 
-conda create --name rrpn_pytorch python=3.6
+conda create --name rrpn_pytorch python=3.6.2
 source activate rrpn_pytorch
 
 # this installs the right pip and dependencies for the fresh python
