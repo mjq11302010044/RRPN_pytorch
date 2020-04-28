@@ -1,3 +1,8 @@
+import cv2
+from maskrcnn_benchmark.utils.visualize import vis_image
+from maskrcnn_benchmark.structures.bounding_box import RBoxList
+from maskrcnn_benchmark.data.transforms import transforms as T
+import json
 import os
 import pickle
 import torch
@@ -486,7 +491,7 @@ def get_ICDAR2017_mlt(mode, dataset_dir):
                 f_content = f_gt.read()
 
                 lines = f_content.split('\n')
-                print (img_candidate_path)
+                print(img_candidate_path)
                 img = cv2.imread(img_candidate_path)
                 boxes = []
 
@@ -577,7 +582,7 @@ def get_ICDAR2017_mlt(mode, dataset_dir):
             f_save_pkl = open('ICDAR2017_validation_cache.pkl', 'wb')
             pickle.dump(im_infos, f_save_pkl)
             f_save_pkl.close()
-            print ("Save pickle done.")
+            print("Save pickle done.")
     else:
         if mode == "train":
             f_pkl = open('./data_cache/ICDAR2017_training_cache.pkl', 'rb')
@@ -593,9 +598,9 @@ def get_ICDAR_LSVT_full(mode, dataset_dir):
     assert mode in ['train', 'val', 'full'], 'mode not in ' + str(['train', 'val', 'full'])
 
     data_split = {
-        'val':[0, 3000],
-        'train':[3000, 30000],
-        'full':[0, 30000]
+        'val': [0, 3000],
+        'train': [3000, 30000],
+        'full': [0, 30000]
     }
 
     vis = False
