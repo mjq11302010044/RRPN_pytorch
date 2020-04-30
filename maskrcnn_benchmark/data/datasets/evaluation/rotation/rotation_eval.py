@@ -5,8 +5,27 @@ from __future__ import division
 import os
 from collections import defaultdict
 import numpy as np
+import cv2
+from PIL import Image
 from maskrcnn_benchmark.structures.bounding_box import RBoxList
 from maskrcnn_benchmark.structures.rboxlist_ops import boxlist_iou, boxlist_nms
+from maskrcnn_benchmark.utils.visualize import vis_image
+
+
+def display_image(pred_bbox_l, gt_boxlist, gt_bbox_l):
+    impath = gt_boxlist.get_field("ID")
+    img = cv2.imread(impath)
+    print(impath)
+    print(img.shape)
+    pil_image_pred = vis_image(Image.fromarray(img[:, :, ::-1]), pred_bbox_l)
+    pil_image_gt = vis_image(Image.fromarray(img[:, :, ::-1]), gt_bbox_l)
+    print("pred box_list:\n", pred_bbox_l.astype(np.float16))
+    print("gt box_list:\n", gt_bbox_l)
+    width, height = pil_image_gt.size
+    print(f'image size: ({width}, {height})')
+    newsize = (width // 5, height // 5)
+    pil_image_pred.resize(newsize).save('./test_pred.png')
+    pil_image_gt.resize(newsize).save('./test_gt.png')
 
 
 def do_rotation_evaluation(dataset, predictions, output_folder, logger):
@@ -22,7 +41,6 @@ def do_rotation_evaluation(dataset, predictions, output_folder, logger):
         image_height = img_info["height"]
         prediction = prediction.resize((image_width, image_height))
         pred_boxlists.append(prediction)
-
         gt_boxlist = dataset.get_groundtruth(image_id)
         gt_boxlists.append(gt_boxlist)
     result = eval_detection_voc(
@@ -32,6 +50,7 @@ def do_rotation_evaluation(dataset, predictions, output_folder, logger):
         use_07_metric=True,
     )
     result_str = "mAP: {:.4f}\n".format(result["map"])
+    result_str += "mIoU: {:.4f}\n".format(np.mean(result["miou"]))
     for i, ap in enumerate(result["ap"]):
         if i == 0:  # skip background
             continue
@@ -58,14 +77,14 @@ def eval_detection_voc(pred_boxlists, gt_boxlists, iou_thresh=0.1, use_07_metric
     assert len(gt_boxlists) == len(
         pred_boxlists
     ), "Length of gt and pred lists need to be same."
-    prec, rec = calc_detection_voc_prec_rec(
+    prec, rec, res_iou = calc_detection_voc_prec_rec(
         pred_boxlists=pred_boxlists, gt_boxlists=gt_boxlists, iou_thresh=iou_thresh
     )
     ap = calc_detection_voc_ap(prec, rec, use_07_metric=use_07_metric)
-    return {"ap": ap, "map": np.nanmean(ap)}
+    return {"ap": ap, "map": np.nanmean(ap), "miou": res_iou}
 
 
-def calc_detection_voc_prec_rec(gt_boxlists, pred_boxlists, iou_thresh=0.1, nms_thresh=0.5):
+def calc_detection_voc_prec_rec(gt_boxlists, pred_boxlists, iou_thresh=0.7, rrpn_margin=1.4 ,nms_thresh=0.5):
     """Calculate precision and recall based on evaluation code of PASCAL VOC.
     This function calculates precision and recall of
     predicted bounding boxes obtained from a dataset which has :math:`N`
@@ -75,25 +94,31 @@ def calc_detection_voc_prec_rec(gt_boxlists, pred_boxlists, iou_thresh=0.1, nms_
     n_pos = defaultdict(int)
     score = defaultdict(list)
     match = defaultdict(list)
+    res_iou = list()
     for gt_boxlist, pred_boxlist in zip(gt_boxlists, pred_boxlists):
-        
+
         pred_bbox = pred_boxlist.bbox.numpy()
         pred_label = pred_boxlist.get_field("labels").numpy()
         pred_score = pred_boxlist.get_field("scores").numpy()
         gt_bbox = gt_boxlist.bbox.numpy()
         gt_label = gt_boxlist.get_field("labels")
         gt_difficult = gt_boxlist.get_field("difficult")
-        
+
         # # select top prediction
-        keep = np.nonzero(pred_score > nms_thresh)
-        pred_bbox = pred_bbox[keep]
-        pred_score = pred_score[keep]
-        pred_label = pred_label[keep]
+        # keep = np.nonzero(pred_score > nms_thresh)
+        # pred_bbox = pred_bbox[keep]
+        # pred_score = pred_score[keep]
+        # pred_label = pred_label[keep]
+        
+        # divide by the RRPN_GT_MARGIN (Context of the Text Region)
+        pred_bbox[:, 2:4] /= rrpn_margin
 
         for l in np.unique(np.concatenate((pred_label, gt_label)).astype(int)):
+
             pred_mask_l = pred_label == l
             pred_bbox_l = pred_bbox[pred_mask_l]
             pred_score_l = pred_score[pred_mask_l]
+
             # sort by score
             order = pred_score_l.argsort()[::-1]
             pred_bbox_l = pred_bbox_l[order]
@@ -112,19 +137,23 @@ def calc_detection_voc_prec_rec(gt_boxlists, pred_boxlists, iou_thresh=0.1, nms_
                 match[l].extend((0,) * pred_bbox_l.shape[0])
                 continue
 
-            # VOC evaluation follows integer typed bounding boxes.
             pred_bbox_l = pred_bbox_l.copy()
             pred_bbox_l[:, 2:] += 1
             gt_bbox_l = gt_bbox_l.copy()
             gt_bbox_l[:, 2:] += 1
+
             iou = boxlist_iou(
                 RBoxList(pred_bbox_l, pred_boxlist.size),
                 # RBoxList(gt_bbox_l, gt_boxlist.size),
                 RBoxList(gt_bbox_l, gt_boxlist.size),
             ).numpy()
-            # print(RBoxList(pred_bbox_l, pred_boxlist.size),
-            #       RBoxList(gt_bbox_l, gt_boxlist.size),)
+            f_iou = iou.max(axis=0)
+            res_iou.extend(f_iou)
+            # print(f_iou)
+            # print(RBoxList(pred_bbox_l, pred_boxlist.size).bbox,
+            #       RBoxList(gt_bbox_l, gt_boxlist.size).bbox,)
             # print(iou)
+            # display_image(pred_bbox_l, gt_boxlist, gt_bbox_l)
             gt_index = iou.argmax(axis=1)
             # set -1 if there is no matching ground truth
             gt_index[iou.max(axis=1) < iou_thresh] = -1
@@ -165,7 +194,7 @@ def calc_detection_voc_prec_rec(gt_boxlists, pred_boxlists, iou_thresh=0.1, nms_
         if n_pos[l] > 0:
             rec[l] = tp / n_pos[l]
 
-    return prec, rec
+    return prec, rec, res_iou
 
 
 def calc_detection_voc_ap(prec, rec, use_07_metric=False):

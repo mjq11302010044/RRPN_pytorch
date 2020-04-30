@@ -1103,7 +1103,7 @@ class RotationDataset(torch.utils.data.Dataset):
         "text"
     )
 
-    def __init__(self, database, use_difficult=False, transforms=None):
+    def __init__(self, database, split, use_difficult=False, transforms=None):
         # database:{dataset_name, dataset_dir}
 
         self.transforms = transforms
@@ -1112,7 +1112,7 @@ class RotationDataset(torch.utils.data.Dataset):
 
         for dataset_name in database:
             if dataset_name in DATASET:
-                self.annobase.extend(DATASET[dataset_name]('train', database[dataset_name]))
+                self.annobase.extend(DATASET[dataset_name](split, database[dataset_name]))
 
         print('DATASET: Total samples from:', database.keys(), len(self.annobase))
 
@@ -1154,7 +1154,6 @@ class RotationDataset(torch.utils.data.Dataset):
         return img, target, index
 
     def get_groundtruth(self, index):
-        img_id = self.ids[index]
         anno = self.annobase[index]
         height, width = anno["height"], anno["width"]
         target = RBoxList(anno["boxes"], (width, height), mode="xywha")
@@ -1184,5 +1183,4 @@ class RotationDataset(torch.utils.data.Dataset):
         # time.sleep(2)
 
 if __name__ == '__main__':
-    # get_ICDAR_LSVT_full('train', '../datasets/LSVT/')
-    get_RC('train', '/home/zhangziwei/datasets/Hisence_data/RC_imgs')
+    get_ICDAR_LSVT_full('train', '../datasets/LSVT/')
