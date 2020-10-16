@@ -2,6 +2,8 @@
 RRPN in pytorch, which is implemented under framework of facebook's benchmark: https://github.com/facebookresearch/maskrcnn-benchmark. 
 Its caffe version can be viewed at: https://github.com/mjq11302010044/RRPN.
 
+This repo has been deprecated, please see our new repo RRPN++ (https://github.com/mjq11302010044/RRPN_plusplus).
+
 ![alt text](demo/results/rrpn3.png "Results from IC15 testing set")
 
 ## Highlights
