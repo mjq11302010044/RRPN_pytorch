@@ -1,3 +1,8 @@
+import cv2
+from maskrcnn_benchmark.utils.visualize import vis_image
+from maskrcnn_benchmark.structures.bounding_box import RBoxList
+from maskrcnn_benchmark.data.transforms import transforms as T
+import json
 import os
 import pickle
 import torch
@@ -10,11 +15,6 @@ if sys.version_info[0] == 2:
     import xml.etree.cElementTree as ET
 else:
     import xml.etree.ElementTree as ET
-import json
-from maskrcnn_benchmark.data.transforms import transforms as T
-from maskrcnn_benchmark.structures.bounding_box import RBoxList
-from maskrcnn_benchmark.utils.visualize import vis_image
-import cv2
 
 
 def get_ICDAR2013(mode, dataset_dir):
@@ -304,7 +304,7 @@ def get_ICDAR2015_RRC_PICK_TRAIN(mode, dataset_dir):
     f_save_pkl = open(cache_file, 'wb')
     pickle.dump(im_infos, f_save_pkl)
     f_save_pkl.close()
-    print ("Save pickle done.")
+    print("Save pickle done.")
 
     return im_infos
 
@@ -349,7 +349,7 @@ def get_ICDAR2017_mlt(mode, dataset_dir):
                 f_content = f_gt.read()
 
                 lines = f_content.split('\n')
-                print (img_candidate_path)
+                print(img_candidate_path)
                 img = cv2.imread(img_candidate_path)
                 boxes = []
                 for gt_line in lines:
@@ -391,7 +391,7 @@ def get_ICDAR2017_mlt(mode, dataset_dir):
                         y_ctr = float(pt1[1] + pt3[1]) / 2  # pt1[1] + np.abs(float(pt1[1] - pt3[1])) / 2
 
                         if height * width < 32 * 32:
-                             continue
+                            continue
 
                         if not gt_ind[8].replace('\n', '') in ['English', 'French', 'German', 'Italian']:
                             continue
@@ -420,7 +420,7 @@ def get_ICDAR2017_mlt(mode, dataset_dir):
 
                     if task == "multi_class":
                         if not boxes[idx][5] in cls_list:
-                            print (boxes[idx][5] + " not in list")
+                            print(boxes[idx][5] + " not in list")
                             continue
                         gt_classes.append(cls_list[boxes[idx][5]])  # cls_text
                         overlap = np.zeros((cls_num))
@@ -465,7 +465,7 @@ def get_ICDAR2017_mlt(mode, dataset_dir):
             f_save_pkl = open('./data_cache/ICDAR2017_training_cache.pkl', 'wb')
             pickle.dump(im_infos, f_save_pkl)
             f_save_pkl.close()
-            print ("Save pickle done.")
+            print("Save pickle done.")
         elif mode == "validation":
             for i in range(1800):
                 img_candidate_path = DATASET_DIR + "ch8_validation_images/" + 'img_' + str(i + 1) + "."
@@ -491,7 +491,7 @@ def get_ICDAR2017_mlt(mode, dataset_dir):
                 f_content = f_gt.read()
 
                 lines = f_content.split('\n')
-                print (img_candidate_path)
+                print(img_candidate_path)
                 img = cv2.imread(img_candidate_path)
                 boxes = []
 
@@ -582,7 +582,7 @@ def get_ICDAR2017_mlt(mode, dataset_dir):
             f_save_pkl = open('ICDAR2017_validation_cache.pkl', 'wb')
             pickle.dump(im_infos, f_save_pkl)
             f_save_pkl.close()
-            print ("Save pickle done.")
+            print("Save pickle done.")
     else:
         if mode == "train":
             f_pkl = open('./data_cache/ICDAR2017_training_cache.pkl', 'rb')
@@ -598,9 +598,9 @@ def get_ICDAR_LSVT_full(mode, dataset_dir):
     assert mode in ['train', 'val', 'full'], 'mode not in ' + str(['train', 'val', 'full'])
 
     data_split = {
-        'val':[0, 3000],
-        'train':[3000, 30000],
-        'full':[0, 30000]
+        'val': [0, 3000],
+        'train': [3000, 30000],
+        'full': [0, 30000]
     }
 
     vis = False
@@ -623,7 +623,7 @@ def get_ICDAR_LSVT_full(mode, dataset_dir):
 
     for imnum in im_codes:
         forder = int(imnum / 15000)
-        imfolder = os.path.join(dataset_dir, 'train_full_images_'+str(forder), 'train_full_images_'+str(forder))
+        imfolder = os.path.join(dataset_dir, 'train_full_images_' + str(forder), 'train_full_images_' + str(forder))
         impath = os.path.join(imfolder, 'gt_' + str(imnum) + '.jpg')
         gt_code = 'gt_' + str(imnum)
         gt_anno = gt_dict[gt_code]
@@ -921,15 +921,14 @@ def get_ICDAR_ReCTs_full(mode, dataset_dir):
     return im_infos
 
 
-
 def get_ICDAR_ArT(mode, dataset_dir):
 
     assert mode in ['train', 'val', 'full'], 'mode not in ' + str(['train', 'val', 'full'])
 
     data_split = {
-        'val':[4000, 5603],
-        'train':[0, 4000],
-        'full':[0, 5603]
+        'val': [4000, 5603],
+        'train': [0, 4000],
+        'full': [0, 5603]
     }
 
     vis = False
@@ -1104,7 +1103,7 @@ class RotationDataset(torch.utils.data.Dataset):
         "text"
     )
 
-    def __init__(self, database, use_difficult=False, transforms=None):
+    def __init__(self, database, split, use_difficult=False, transforms=None):
         # database:{dataset_name, dataset_dir}
 
         self.transforms = transforms
@@ -1113,7 +1112,7 @@ class RotationDataset(torch.utils.data.Dataset):
 
         for dataset_name in database:
             if dataset_name in DATASET:
-                self.annobase.extend(DATASET[dataset_name]('train', database[dataset_name]))
+                self.annobase.extend(DATASET[dataset_name](split, database[dataset_name]))
 
         print('DATASET: Total samples from:', database.keys(), len(self.annobase))
 
@@ -1153,6 +1152,14 @@ class RotationDataset(torch.utils.data.Dataset):
                 self.show_boxes(img, target)
 
         return img, target, index
+
+    def get_groundtruth(self, index):
+        anno = self.annobase[index]
+        height, width = anno["height"], anno["width"]
+        target = RBoxList(anno["boxes"], (width, height), mode="xywha")
+        target.add_field("labels", anno["gt_classes"])
+        target.add_field("difficult", np.array([0 for i in range(len(anno["gt_classes"]))]))
+        return target
 
     def __len__(self):
         return len(self.ids)
