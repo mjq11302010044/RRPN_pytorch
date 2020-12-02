@@ -147,7 +147,8 @@ def get_ICDAR2013(mode, dataset_dir):
 def get_ICDAR2015_RRC_PICK_TRAIN(mode, dataset_dir):
     # dir_path = "/home/shiki-alice/Downloads/ICDAR2015/ch4_training_images/"
     img_file_type = "jpg"
-
+    a=dataset_dir
+    dataset_dir=os.path.join(os.getcwd()+a[2:])
     image_dir = os.path.join(dataset_dir, 'ch4_training_images/')
     gt_dir = os.path.join(dataset_dir, 'ch4_training_localization_transcription_gt/')
 
@@ -173,7 +174,7 @@ def get_ICDAR2015_RRC_PICK_TRAIN(mode, dataset_dir):
 
         boxes = []
         # print gt_name
-        gt_obj = open(gt_name, 'r')
+        gt_obj = open(gt_name, 'r',encoding='utf-8')
         gt_txt = gt_obj.read()
         gt_split = gt_txt.split('\n')
         img = cv2.imread(img_name)
